@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Lightbox Logic
+    // Lightbox Logic (Không thay đổi)
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightbox-image');
     const lightboxClose = document.getElementById('lightbox-close');
@@ -59,17 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         showTypingIndicator();
 
+        // Mô phỏng độ trễ của AI
         setTimeout(() => {
-            const aiResponse = getMockAiResponse(userInput);
+            const aiResponse = getAiResponse(userInput);
             hideTypingIndicator();
             addMessageToChat(aiResponse, 'ai');
-        }, 1500);
+        }, 1200);
     });
 
     function addMessageToChat(text, sender) {
         const bubble = document.createElement('div');
         bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'ai-bubble');
-        bubble.textContent = text;
+        bubble.innerHTML = text; // Sử dụng innerHTML để có thể render các thẻ HTML
         chatMessages.appendChild(bubble);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -86,22 +87,67 @@ document.addEventListener('DOMContentLoaded', () => {
         const indicator = document.getElementById('typing-indicator');
         if(indicator) indicator.remove();
     }
+    
+    // --- CƠ SỞ TRI THỨC MỚI CỦA AI ---
+    const knowledgeBase = [
+        {
+            keywords: ['gamma', 'cine', 'cinetone', 's-log', 'log'],
+            response: "<b>Gamma</b> quyết định đường cong tương phản và 'chất' của hình ảnh. <br><br><b>S-Cinetone</b> & <b>Cine1/2/3/4</b>: Cho màu sắc điện ảnh, sẵn sàng sử dụng. S-Cinetone có tone màu da rất đẹp. <br><br><b>S-Log2/S-Log3</b>: Giữ lại nhiều chi tiết nhất ở vùng sáng và tối, hình ảnh rất 'phẳng'. Cần phải chỉnh màu (color grade) ở hậu kỳ để có kết quả tốt nhất."
+        },
+        {
+            keywords: ['color depth', 'độ sâu màu'],
+            response: "<b>Color Depth</b> là công cụ mạnh mẽ để tinh chỉnh độ sáng (luminance) của từng màu riêng lẻ (Đỏ, Xanh lá, Xanh dương, Cyan, Magenta, Vàng). Nó giúp bạn nhấn mạnh hoặc làm dịu đi một màu sắc cụ thể mà không ảnh hưởng nhiều đến các màu khác."
+        },
+        {
+            keywords: ['lưu', 'save', 'memory', 'gọi lại', 'recall'],
+            response: "Để lưu công thức, bạn vào Menu:<br>• <b>Menu Mới (A7IV, A7SIII...):</b> Shooting → Camera Set. Memory.<br>• <b>Menu Cũ (A7III, A6400...):</b> Camera 1 (Tab 1, trang 7) → Memory.<br><br>Sau đó chọn vị trí 1, 2, 3 (lưu vào máy, gọi bằng vòng xoay) hoặc M1-M4 (lưu vào thẻ nhớ)."
+        },
+        {
+            keywords: ['knee'],
+            response: "<b>Knee</b> giúp kiểm soát các vùng rất sáng (highlights) để tránh bị 'cháy' (overexposure). <br><br><b>Auto:</b> Máy tự động xử lý, hoạt động tốt trong hầu hết trường hợp.<br><b>Manual:</b> Cho phép bạn kiểm soát chính xác điểm bắt đầu (Point) và độ dốc (Slope) của vùng nén sáng, giúp chuyển tiếp mượt mà hơn."
+        },
+        {
+            keywords: ['black level', 'mức độ đen'],
+            response: "<b>Black Level</b> điều chỉnh điểm đen tuyền (màu đen sâu nhất) trong ảnh. Tăng giá trị (+) sẽ làm vùng tối sáng hơn (blacks fade), trong khi giảm giá trị (-) sẽ làm vùng tối sâu hơn (crushed blacks)."
+        },
+        {
+            keywords: ['black gamma', 'gamma đen'],
+            response: "<b>Black Gamma</b> chỉ điều chỉnh đường cong gamma ở các vùng tối. <br><br><b>Wide:</b> Nâng các chi tiết vùng tối lên.<br><b>Narrow:</b> Làm cho vùng tối sâu hơn, tăng tương phản ở vùng tối."
+        },
+        {
+            keywords: ['color mode', 'chế độ màu'],
+            response: "<b>Color Mode</b> xác định không gian màu và đặc tính màu sắc. <br><br><b>S-Cinetone/Movie/Still:</b> Các chế độ màu tiêu chuẩn, cho ra màu sắc tự nhiên. <br><b>S-Gamut3.Cine / S-Gamut3:</b> Không gian màu rộng, thường đi kèm với S-Log để hậu kỳ chuyên sâu, cho phép bạn linh hoạt chỉnh sửa màu sắc."
+        },
+        {
+            keywords: ['mojave', 'scl-01'],
+            response: "Công thức <b>SCL-01: Mojave Sun</b> tạo ra tone màu film hoài niệm, với sắc vàng ấm áp. Rất phù hợp cho ảnh du lịch, đời thường và phong cảnh. Các thông số chính là <b>Gamma: Cine1</b> và <b>Color Mode: S-Gamut3</b>."
+        },
+        {
+            keywords: ['daylight', 'scl-27', 'trắng hồng'],
+            response: "Công thức <b>SCL-27: Daylight Cinema</b> mang lại tone da trắng hồng, trong trẻo và hiện đại, tối ưu cho điều kiện ánh sáng ban ngày. Công thức này sử dụng <b>Gamma & Color Mode: S-Cinetone</b> để có màu da đẹp tự nhiên."
+        },
+        {
+            keywords: ['stream', 'procolor', 'live'],
+            response: "Công thức <b>PROCOLOR-003</b> được thiết kế cho live stream chuyên nghiệp. Nó giúp kiểm soát tốt vùng sáng (nhờ Knee 105%), đảm bảo hình ảnh không bị cháy sáng ngay cả khi dùng đèn mạnh."
+        },
+        {
+            keywords: ['picture profile', 'hồ sơ màu'],
+            response: "<b>Picture Profile (PP)</b> là một menu trên máy ảnh Sony cho phép bạn tùy chỉnh sâu các thông số hình ảnh như Gamma (tương phản), Color Mode (màu sắc), Knee (vùng sáng), Black Level (vùng tối) và nhiều hơn nữa để tạo ra một 'look' hình ảnh độc đáo ngay từ trong máy."
+        }
+    ];
 
-    function getMockAiResponse(input) {
+    function getAiResponse(input) {
         const lowerInput = input.toLowerCase();
-        if (lowerInput.includes('gamma') || lowerInput.includes('cine') || lowerInput.includes('cinetone')) {
-            return "Gamma là đường cong tương phản, quyết định 'chất' của ảnh. Cine1 và S-Cinetone cho cảm giác điện ảnh, trong khi S-Log2/3 giữ lại nhiều chi tiết nhất để hậu kỳ.";
+        
+        for (const item of knowledgeBase) {
+            for (const keyword of item.keywords) {
+                if (lowerInput.includes(keyword)) {
+                    return item.response;
+                }
+            }
         }
-        if (lowerInput.includes('color depth') || lowerInput.includes('màu') || lowerInput.includes('depth')) {
-            return "Color Depth là công cụ mạnh nhất để chỉnh màu. Nó giúp bạn tăng/giảm độ sáng của từng màu riêng lẻ (Đỏ, Lục, Lam, Cyan, Magenta, Vàng) để đạt được sắc thái chính xác bạn muốn.";
-        }
-        if (lowerInput.includes('lưu') || lowerInput.includes('save') || lowerInput.includes('memory')) {
-            return "Để lưu công thức, bạn vào Menu -> Shooting (tab màu hồng) -> Shooting Mode -> Camera Set. Memory. Sau đó chọn vị trí 1, 2, 3 (trên vòng xoay) hoặc M1-M4 (trên thẻ nhớ) để lưu.";
-        }
-         if (lowerInput.includes('knee')) {
-            return "Knee kiểm soát cách các vùng sáng (highlight) được nén lại để tránh bị 'cháy sáng'. Chế độ Tự động hoạt động tốt trong hầu hết các trường hợp, trong khi Thủ công (Manual) cho phép bạn kiểm soát chính xác hơn điểm và độ dốc của vùng chuyển tiếp.";
-        }
-        return "Cảm ơn câu hỏi của bạn! Tôi vẫn đang trong giai đoạn học hỏi và sẽ sớm có câu trả lời chi tiết hơn. Trong lúc này, bạn có thể tham khảo các thông số chi tiết trên trang nhé.";
-    }
 
+        // Câu trả lời mặc định nếu không tìm thấy từ khóa
+        return "Cảm ơn câu hỏi của bạn! Tôi có thể trả lời các câu hỏi về thông số như Gamma, Knee, Color Mode, hoặc các công thức màu cụ thể trên trang. Bạn hãy thử hỏi nhé.";
+    }
 });
