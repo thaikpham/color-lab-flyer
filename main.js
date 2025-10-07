@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- RECIPE MODAL LOGIC ---
-    const viewRecipeBtns = document.querySelectorAll('.view-recipe-btn');
+    const recipeCards = document.querySelectorAll('.recipe-card');
     const recipeModals = document.querySelectorAll('.recipe-modal');
     const closeRecipeBtns = document.querySelectorAll('.close-modal-btn');
 
@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    viewRecipeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const modalId = btn.getAttribute('data-modal-target');
+    recipeCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const modalId = card.getAttribute('data-modal-target');
             const modal = document.querySelector(modalId);
             openModal(modal);
         });
@@ -171,3 +171,4 @@ document.addEventListener('DOMContentLoaded', () => {
         return "Cảm ơn câu hỏi của bạn! Tôi có thể trả lời các câu hỏi về thông số như Gamma, Knee, Color Mode, hoặc các công thức màu cụ thể trên trang. Bạn hãy thử hỏi nhé.";
     }
 });
+
