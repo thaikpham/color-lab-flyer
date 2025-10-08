@@ -289,4 +289,3 @@ body {
 #chat-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 9999px; padding: 0.5rem 1rem; font-size: 0.9rem; }
 #chat-input:focus { outline: none; border-color: var(--primary-accent); box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2); }
 #chat-submit { background-color: var(--primary-accent); color: white; border: none; border-radius: 50%; width: 2.25rem; height: 2.25rem; flex-shrink: 0; cursor: pointer; }
-
