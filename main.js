@@ -171,4 +171,3 @@ document.addEventListener('DOMContentLoaded', () => {
         return "Cảm ơn câu hỏi của bạn! Tôi có thể trả lời các câu hỏi về thông số như Gamma, Knee, Color Mode, hoặc các công thức màu cụ thể trên trang. Bạn hãy thử hỏi nhé.";
     }
 });
-
