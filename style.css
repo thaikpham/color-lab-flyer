@@ -146,25 +146,6 @@ body {
     transform: scale(1.1);
 }
 
-.video-iframe-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    margin-top: 0.75rem;
-}
-
-.video-iframe-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
-
 /* --- Modal & Lightbox Styles --- */
 .param-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
 .param-item { background: #f5f5f7; padding: 0.75rem; border-radius: 0.75rem; }
@@ -187,3 +168,74 @@ body {
 .photo-collage img { width: 100%; height: 100%; object-fit: cover; border-radius: 0.5rem; cursor: pointer; transition: transform 0.3s var(--ease-apple); }
 .photo-collage img:hover { transform: scale(1.05); }
 .photo-collage .main-image { grid-column: 1 / 2; grid-row: 1 / 3; }
+
+
+/* --- Video Lightbox Styles --- */
+.video-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-apple);
+    padding: 1rem;
+}
+
+.video-lightbox-overlay.visible {
+    display: flex;
+    opacity: 1;
+}
+
+.video-lightbox-content {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s var(--ease-apple), opacity 0.3s var(--ease-apple);
+}
+
+.video-lightbox-overlay.visible .video-lightbox-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#video-player-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    background-color: #000;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+#video-player-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+#video-lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: -5px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+    font-weight: 200;
+}
+
+#video-lightbox-close:hover {
+    color: white;
+}
