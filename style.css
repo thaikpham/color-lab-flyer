@@ -104,10 +104,20 @@ body {
     overflow: hidden;
     border-radius: 0.5rem;
     margin-top: 0.75rem;
+    /* Forcing 16:9 aspect ratio */
+    height: 0;
+    padding-bottom: 56.25%; /* 9 / 16 = 0.5625 */
+    background-color: #222; /* Placeholder color */
 }
 
 .video-thumbnail img {
+    /* Make image fill the 16:9 container */
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    object-fit: cover; /* This crops the image to fit, removing black bars */
     display: block;
     transition: transform 0.3s var(--ease-apple);
 }
@@ -239,3 +249,4 @@ body {
 #video-lightbox-close:hover {
     color: white;
 }
+
